@@ -16,9 +16,16 @@ Including another URLconf
 from django.urls import path
 from tickets.views import WelcomeView
 from tickets.views import MenuView
+from tickets.views import ChangeOilView
+from tickets.views import InflateTiresView
+from tickets.views import DiagnosticView
+
 
 
 urlpatterns = [
     path('welcome/', WelcomeView.as_view()),
-    path('menu/', MenuView.as_view())
+    path('menu/', MenuView.as_view()),
+    path('get_ticket/change_oil/', ChangeOilView.as_view()),
+    path('get_ticket/inflate_tires/', InflateTiresView.as_view()),
+    path('get_ticket/diagnostic/', DiagnosticView.as_view())
 ]
