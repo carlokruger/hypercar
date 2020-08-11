@@ -1,1 +1,1 @@
-web: gunicorn hypercar:hypercar
+web: gunicorn hypercar.wsgi
