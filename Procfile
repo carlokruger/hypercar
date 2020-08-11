@@ -1,1 +1,1 @@
-web: gunicorn hypercar:app
+web: gunicorn hypercar:hypercar
