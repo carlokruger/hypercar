@@ -3,6 +3,7 @@ from django.views import View
 from django.shortcuts import render
 
 
+
 current_id = 0
 cars = {"change_oil": [], "inflate_tires": [], "diagnostic": []}
 
@@ -24,6 +25,7 @@ def get_wait_time(service):
     elif service == "diagnostic":
         return (len(cars["change_oil"]) * 2) + (len(cars["inflate_tires"]) * 5) + ((len(cars[service]) - 1) * 30)
 
+
 class WelcomeView(View):
     def get(self, request, *args, **kwargs):
         return HttpResponse('<h2>Welcome to the Hypercar Service!</h2>')
@@ -38,7 +40,6 @@ class MenuView(View):
 
 class ChangeOilView(View):
     template_name1 = "get_ticket/change_oil.html"
-
 
     def get(self, request, *args, **kwargs):
         id = get_id("change_oil")
@@ -62,3 +63,18 @@ class DiagnosticView(View):
         id = get_id("diagnostic")
         wait_time = get_wait_time("diagnostic")
         return render(request, self.template_name3, {'id': id, 'minutes_to_wait': wait_time})
+
+
+class ProcessingView(View):
+    template_name4 = "tickets/processing.html"
+
+    def get(self, request, *args, **kwargs):
+        global cars
+        oil = len(cars["change_oil"])
+        tires = len(cars["inflate_tires"])
+        diag = len(cars["diagnostic"])
+        return render(request, self.template_name4, {"change_oil": oil,
+                                                     "inflate_tires": tires,
+                                                     "diagnostic": diag})
+
+
