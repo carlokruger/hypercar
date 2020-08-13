@@ -18,9 +18,8 @@ from tickets.views import WelcomeView
 from tickets.views import MenuView
 from tickets.views import ChangeOilView
 from tickets.views import InflateTiresView
-from tickets.views import DiagnosticView, ProcessingView
+from tickets.views import DiagnosticView, ProcessingView, NextView
 from django.views.generic import RedirectView
-
 
 
 urlpatterns = [
@@ -30,5 +29,7 @@ urlpatterns = [
     path('get_ticket/inflate_tires/', InflateTiresView.as_view()),
     path('get_ticket/diagnostic/', DiagnosticView.as_view()),
     path('processing', ProcessingView.as_view()),
-    path('processing/', RedirectView.as_view(url='/processing'))
+    path('processing/', RedirectView.as_view(url='/processing')),
+    path('next', NextView.as_view()),
+    path('next/', RedirectView.as_view(url='/next'))
 ]

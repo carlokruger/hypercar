@@ -1,8 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
-from django.shortcuts import render
-
-
+from django.shortcuts import render, redirect
 
 current_id = 0
 cars = {"change_oil": [], "inflate_tires": [], "diagnostic": []}
@@ -24,6 +22,18 @@ def get_wait_time(service):
         return (len(cars["change_oil"]) * 2) + ((len(cars[service]) - 1) * 5)
     elif service == "diagnostic":
         return (len(cars["change_oil"]) * 2) + (len(cars["inflate_tires"]) * 5) + ((len(cars[service]) - 1) * 30)
+
+
+def pop_id():
+    global cars
+    if len(cars["change_oil"]) > 1:
+        return cars["change_oil"].pop(0)
+    elif len(cars["change_oil"]) == 0 and len(cars["inflate_tires"]) > 1:
+        return cars["inflate_tires"].pop(0)
+    elif len(cars["change_oil"]) == 0 and len(cars["inflate_tires"]) == 0 and len(cars["diagnostic"]) > 1:
+        return cars["diagnostic"].pop(0)
+    else:
+        return None
 
 
 class WelcomeView(View):
@@ -67,14 +77,26 @@ class DiagnosticView(View):
 
 class ProcessingView(View):
     template_name4 = "tickets/processing.html"
+    template_next = "tickets/next.html"
 
     def get(self, request, *args, **kwargs):
         global cars
         oil = len(cars["change_oil"])
         tires = len(cars["inflate_tires"])
         diag = len(cars["diagnostic"])
-        return render(request, self.template_name4, {"change_oil": oil,
-                                                     "inflate_tires": tires,
-                                                     "diagnostic": diag})
+        return render(request, self.template_name4, {"change_oil": oil, "inflate_tires": tires, "diagnostic": diag})
 
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_next)
+
+
+class NextView(View):
+    template_name5 = "tickets/next.html"
+
+    def post(self, request, *args, **kwargs):
+        idx = pop_id()
+        return render(request, self.template_name5, {"id": idx})
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name5)
 
