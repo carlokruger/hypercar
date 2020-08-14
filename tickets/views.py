@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 
 current_id = 0
 cars = {"change_oil": [], "inflate_tires": [], "diagnostic": []}
+idx = 0
 
 
 def get_id(service):
@@ -26,7 +27,7 @@ def get_wait_time(service):
 
 def pop_id():
     global cars
-    if len(cars["change_oil"]) > 1:
+    if len(cars["change_oil"]) >= 1:
         return cars["change_oil"].pop(0)
     elif len(cars["change_oil"]) == 0 and len(cars["inflate_tires"]) > 1:
         return cars["inflate_tires"].pop(0)
@@ -81,22 +82,29 @@ class ProcessingView(View):
 
     def get(self, request, *args, **kwargs):
         global cars
+
+
         oil = len(cars["change_oil"])
         tires = len(cars["inflate_tires"])
         diag = len(cars["diagnostic"])
+
         return render(request, self.template_name4, {"change_oil": oil, "inflate_tires": tires, "diagnostic": diag})
 
     def post(self, request, *args, **kwargs):
+        global idx
+        idx = pop_id()
         return render(request, self.template_next)
-
+        #return redirect(self.template_next)
 
 class NextView(View):
     template_name5 = "tickets/next.html"
 
     def post(self, request, *args, **kwargs):
+        global idx
         idx = pop_id()
         return render(request, self.template_name5, {"id": idx})
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name5)
+        global idx
+        return render(request, self.template_name5, {"id": idx})
 

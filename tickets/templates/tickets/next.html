@@ -5,12 +5,11 @@
     <title>Next Ticket</title>
 </head>
 <body>
-{% if id != None %}
+{% if id != 0 and id != None %}
     <div>Next ticket #{{ id }}</div>
 {%  else %}
     <div>Waiting for the next client</div>
 {% endif %}
-
 
 </body>
 </html>
